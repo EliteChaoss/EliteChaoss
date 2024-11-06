@@ -363,12 +363,11 @@ Tab:AddButton({
   	end    
 })
 
-Tab:AddToggle({
-	Name = "Toggle Inf Jump",
-	Default = false,
+Tab:AddButton({
+	Name = "Inf Jump",
 	Callback = function(Value)
-        loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/Infinite%20Jump.txt"))()
-		print(Value)
+    loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/Infinite%20Jump.txt"))()
+    print("Infinite Jump executed succsefully!")
 	end  
 })
 
