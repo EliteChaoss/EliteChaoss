@@ -372,14 +372,6 @@ Tab:AddToggle({
 	end  
 })
 
-Tab:AddColorpicker({
-	Name = "Colorpicker",
-	Default = Color3.fromRGB(255, 255, 255),
-	Callback = function(Value)
-		print(Value)
-	end	  
-})
-
 local Section = DupeingTab:AddSection({
 	Name = "Start Dupe"
 })
