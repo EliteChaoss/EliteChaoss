@@ -3439,7 +3439,7 @@ RealDupeSection:CreateToggle({
 local RealDupeSection = Dupe:CreateSection('Spawn')
 
 RealDupeSection:CreateButton({
-    Name = 'Spawn Sleigh',
+    Name = 'Spawn Sleigh        	(REQ.  |   5 Ruby, 100 Candy) ',
     Callback = function(Value)
         if IsPlayerAlive(LocalPlayer) then
         local function GetClosestTrapPlayer()
@@ -3469,7 +3469,7 @@ end
 })
 
 RealDupeSection:CreateButton({
-    Name = 'Spawn Grinchs Sleigh    (REQ.  |   6 Coal, 5 Zen, 200 Candy) ',
+    Name = 'Spawn Grinchs Sleigh        	(REQ.  |   6 Coal, 5 Zen, 200 Candy) ',
     Callback = function(Value)
         if IsPlayerAlive(LocalPlayer) then
         local function GetClosestTrapPlayer()
@@ -3498,18 +3498,6 @@ RealDupeSection:CreateButton({
 end
 })
 
-local RealDupeSection = Dupe:CreateSection('Admin Shit')
-
-RealDupeSection:CreateButton({
-    Name = 'Get admin items',
-    Callback = function(Value)
-   RemoteEvents['EnabelAdmin']:FireServer()
-end
-})
-
-RemoteEvents['EnabelAdmin']:FireServer()
-
-
 local AutoSellSection = AutoSell:CreateSection('AutoSell (This does not account for pet token multipliers)')
 
 AutoSellSection:CreateToggle({
@@ -3524,7 +3512,7 @@ AutoSellSection:CreateToggle({
             end
         end
     end
-})
+})w
 
 AutoSellSection:CreateToggle({
     Name = '4 Slime Ball = 1 Token',
