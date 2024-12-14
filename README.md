@@ -685,23 +685,21 @@ local Main = AtlasUi:CreatePage("Main")
 
 local Combat = AtlasUi:CreatePage("Combat")
 
+local Dupe = AtlasUi:CreatePage("Dupe & Spawn")
+
+local Visuals = AtlasUi:CreatePage("Visuals")
+
+local LPlayer = AtlasUi:CreatePage("LocalPlayer")
+
+local Chests = AtlasUi:CreatePage("Treasure Chests")
+
 local Farming = AtlasUi:CreatePage("Farm")
 
 local Teleports = AtlasUi:CreatePage("Teleports")
 
 local OtherStuff = AtlasUi:CreatePage("Resources")
 
-local Chests = AtlasUi:CreatePage("Treasure Chests")
-
-local LPlayer = AtlasUi:CreatePage("LocalPlayer")
-
-local Dupe = AtlasUi:CreatePage("Dupe")
-
 local AutoSell = AtlasUi:CreatePage("AutoSell")
-
-local Visuals = AtlasUi:CreatePage("Visuals")
-
-local Credits = AtlasUi:CreatePage("Credits")
 
 --stop everything if an admin joins
 Players.PlayerAdded:Connect(function(admin)
@@ -1353,7 +1351,6 @@ function AutoRepairClub()
                                             RemoteEvents['UpdateStorageChest']:FireServer(ClosestChest, true, 230)
                                             RemoteEvents['UpdateStorageChest']:FireServer(ClosestChest, false, 230)
                                             MakeAtlasNotification('Repaired', 'Club repaired', 1)
-
                                             task.wait(0.2)
                                             pcall(function()
                                                 if MyInventory:FindFirstChild('Obsidian Club') then
@@ -1424,6 +1421,87 @@ function TrapPlayer()
             return closest
         end
         RemoteEvents['CraftItem']:FireServer(371, GetClosestTrapPlayer(), 690)
+    end
+end
+
+function CraftSleigh1()
+    if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(183, GetClosestTrapPlayer(), 690)
+    end
+end
+
+function CraftSleigh2()
+    if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(185, GetClosestTrapPlayer(), 690)
+    end
+end
+
+function CraftSleigh3()
+    if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(184, GetClosestTrapPlayer(), 690)
     end
 end
 
@@ -3357,6 +3435,80 @@ RealDupeSection:CreateToggle({
         end
     end
 })
+
+local RealDupeSection = Dupe:CreateSection('Spawn')
+
+RealDupeSection:CreateButton({
+    Name = 'Spawn Sleigh',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(183, GetClosestTrapPlayer(), 690)
+    end
+end
+})
+
+RealDupeSection:CreateButton({
+    Name = 'Spawn Grinchs Sleigh    (REQ.  |   6 Coal, 5 Zen, 200 Candy) ',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(185, GetClosestTrapPlayer(), 690)
+    end
+end
+})
+
+local RealDupeSection = Dupe:CreateSection('Admin Shit')
+
+RealDupeSection:CreateButton({
+    Name = 'Get admin items',
+    Callback = function(Value)
+   RemoteEvents['EnabelAdmin']:FireServer()
+end
+})
+
+RemoteEvents['EnabelAdmin']:FireServer()
+
 
 local AutoSellSection = AutoSell:CreateSection('AutoSell (This does not account for pet token multipliers)')
 
