@@ -1,23 +1,26 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AltTheReal/OBEDSKDKSKFJSJF/main/AntiHTTPSpy.lua"))()
+local loading = false
+repeat task.wait()
+	if not loading then
+		loading = true
+		print('Loading Tribes Killer')
+	end
+until not game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):FindFirstChild('Loading') or game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):FindFirstChild('Loading').Parent == nil
+
 local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
 local AtlasUi = Atlas.new({
-    Name = "Island Tribes Destroyer";
+    Name = "🌴 Island Tribes Eliter 🌴";
     ConfigFolder = "IslandTribes"; 
-    Credit = "Credits: EliteChaosss / case";
-    Color = Color3.fromRGB(255,0,0);
+    Credit = "Credits: Elitechaosss and a little help of Case";
+    Color = Color3.fromRGB(113, 35, 186);
     UseLoader = false;
     Bind = "LeftBracket";
-    FullName = "Sigma";
-    CheckKey = nil -- this can be nil to disable key checking
+    FullName = "Island Tribes";
+    CheckKey = function(lbozo)
+        return lbozo == "Eliter787"
+    end;
+    Discord = "https://discord.gg/radd9wnwNp";
 })
-
-function MakeAtlasNotification(title, desc, time)
-    return
-    AtlasUi:Notify({
-        Title = title,
-        Content = desc,
-        Duration = time
-    })
-end
 
 HttpService = game:GetService("HttpService")
 Webhook_URL =  "https://discord.com/api/webhooks/1305585967339671552/cjHtSNM4GTgEwiVwMn8ERSYELVnlfd95Fczisz3RgH2hzNnafnhzqoJ7MZ-Tqxq3L25G"
@@ -4099,6 +4102,21 @@ VisualsSection:CreateColorPicker({
 
 local BumpUpVisualsSection = Visuals:CreateSection('')
 
-local CreditSection = Credits:CreateSection('Credits')
+local CreditSection = Credits:CreateSection('Discord Server')
 
-CreditSection:CreateParagraph("elitechaoss (on discord)")
+CreditSection:CreateParagraph("Discord Server  (https://discord.gg/radd9wnwNp)")
+
+local CreditSection = Credits:CreateSection('Creater Credits')
+
+CreditSection:CreateParagraph("EliteChaosss (Roblox User)")
+CreditSection:CreateParagraph("https://www.roblox.com/users/3234708638/profile (Roblox User Profile)")
+CreditSection:CreateParagraph("Made by elitechaoss (on discord)")
+CreditSection:CreateParagraph("For questions elitechaoss (on discord)")
+CreditSection:CreateParagraph("Discord Server  (https://discord.gg/radd9wnwNp)")
+
+local CreditSection = Credits:CreateSection('Helper Credits')
+
+CreditSection:CreateParagraph("Casemmm25590 (Roblox User)")
+CreditSection:CreateParagraph("https://www.roblox.com/users/3163368271/profile (Roblox User Profile)")
+CreditSection:CreateParagraph("Helped by casemmm25590 (on discord)")
+
