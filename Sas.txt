@@ -1909,7 +1909,7 @@ end
 local MainSection = Main:CreateSection("Main")
 
 MainSection:CreateToggle({
-    Name = 'Remember Configs',
+    Name = 'Remember Keybinds',
     Default = false,
     Flag = 'RememberConfigs',
     Callback = function(Value)
@@ -1918,7 +1918,7 @@ MainSection:CreateToggle({
 })
 
 MainSection:CreateButton({
-    Name = 'AC Bypass',
+    Name = 'AC Bypass Isn't working yet',
     Callback = function()
         Remote = game:GetService("ReplicatedStorage").References.Comm.Events.Sonar
 
