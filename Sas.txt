@@ -729,18 +729,17 @@ Players.PlayerAdded:Connect(function(admin)
 end)
 
 --setup ac bypass
-if not getgenv().bypassing then
-    getgenv().bypassing = true
-    local bypassac
+Remote = game:GetService("ReplicatedStorage").References.Comm.Events.Sonar
 
-    bypassac = hookmetamethod(game, '__namecall', function(self, ...)
-        local args = {...}
-        if not checkcaller() and self == RemoteEvents['Sonar'] then
-            return nil
-        end
-        return bypassac(self, ...)
-    end) 
-end
+local bypassac
+
+bypassac = hookmetamethod(game, '__namecall', function(self, ...)
+    local args = {...}
+    if not checkcaller() and self == Remote then
+        return nil
+    end
+    return bypassac(self, ...)
+end)
 
 --Antiafk
 if not getgenv().Idling ~= true then
@@ -1921,20 +1920,17 @@ MainSection:CreateToggle({
 MainSection:CreateButton({
     Name = 'AC Bypass',
     Callback = function()
-        if not IsPlayerAlive(LocalPlayer) then
-            MakeAtlasNotification('Not alive', 'Maybe click the play button?', 5)
-            return
-        end
-        if IsPlayerAlive(LocalPlayer) then
-            local oldpos = LocalPlayer.Character.HumanoidRootPart.CFrame
-            local myroot = LocalPlayer.Character.HumanoidRootPart
-			for i=1, 100 do
-				myroot.CFrame = CFrame.new(7562, 221, 18946)
-            	RemoteEvents['Sonar']:FireServer()
-            	myroot.CFrame = oldpos
-			end
-            message.New('Positive', 'Bypassed AntiCheat')
-        end
+        Remote = game:GetService("ReplicatedStorage").References.Comm.Events.Sonar
+
+	local bypassac
+
+	bypassac = hookmetamethod(game, '__namecall', function(self, ...)
+   	 local args = {...}
+    	if not checkcaller() and self == Remote then
+   	     return nil
+  	  end
+    	return bypassac(self, ...)
+	end)
     end
 })
 
@@ -2420,9 +2416,9 @@ AdvancedKillAuraSection:CreateTextBox({
     end
 })
 AdvancedKillAuraSection:CreateSliderToggle({
-	Name = "Op Kill Aura(Dont touch slider)",
-	Min = 1,
-	Max = 8,
+	Name = "Op Kill Aura",
+	Min = 2,
+	Max = 3,
     SliderDefault = 3,
 	Digits = 0,
 	ToggleDefault = false,
