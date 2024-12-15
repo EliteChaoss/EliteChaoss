@@ -2365,7 +2365,7 @@ CloseCombatSection:CreateToggle({
 })
 
 CloseCombatSection:CreateToggle({
-    Name = 'Hitbox Extender',
+    Name = 'Hitbox Extender   Bow only',
     Default = false,
     Flag = 'HitboxExtender',
     Callback = function(Value)
