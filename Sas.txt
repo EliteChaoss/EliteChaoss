@@ -3432,7 +3432,7 @@ RealDupeSection:CreateButton({
 end
 })
 
-local RealDupeSection = Dupe:CreateSection('Spawn Ships')
+local RealDupeSection = Dupe:CreateSection('Spawn Decoration')
 
 RealDupeSection:CreateButton({
     Name = 'Spawn Pirate Ship        	(REQ.  |   1 Wood) ',
@@ -3463,8 +3463,6 @@ RealDupeSection:CreateButton({
     end
 end
 })
-
-local RealDupeSection = Dupe:CreateSection('Spawn Decoration')
 
 RealDupeSection:CreateButton({
     Name = 'Spawn Potion Cauldron        	(REQ.  |   ???) ',
