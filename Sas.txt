@@ -1917,23 +1917,6 @@ MainSection:CreateToggle({
     end
 })
 
-MainSection:CreateButton({
-    Name = 'AC Bypass Isn't working yet',
-    Callback = function()
-        Remote = game:GetService("ReplicatedStorage").References.Comm.Events.Sonar
-
-	local bypassac
-
-	bypassac = hookmetamethod(game, '__namecall', function(self, ...)
-   	 local args = {...}
-    	if not checkcaller() and self == Remote then
-   	     return nil
-  	  end
-    	return bypassac(self, ...)
-	end)
-    end
-})
-
 MainSection:CreateInteractable({
     Name = 'Infinite Yield',
     ActionText = 'Execute',
