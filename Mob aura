@@ -700,8 +700,6 @@ local Farming = AtlasUi:CreatePage("Farm")
 
 local Teleports = AtlasUi:CreatePage("Teleports")
 
-local OtherStuff = AtlasUi:CreatePage("Resources")
-
 local AutoSell = AtlasUi:CreatePage("AutoSell")
 
 --stop everything if an admin joins
@@ -995,36 +993,6 @@ function MineAura()
                 if NearestOre then
                     RemoteEvents['ToolAction']:FireServer(NearestOre)
                 end
-            end
-        end
-    end
-end
-
-function MobAura()
-    while getgenv().configs.MobAura do
-        if getgenv().configs.MobAura then
-            task.wait(.15)
-            local function getclosestmob()
-                local range = 30
-                local closestmob = nil
-                if IsPlayerAlive(LocalPlayer) then
-                    for _, mob in pairs(Workspace:WaitForChild('Replicators'):WaitForChild('Both'):GetChildren()) do
-                        if mob:FindFirstChild('HumanoidRootPart') and mob:FindFirstChild('Humanoid') and mob:FindFirstChild('Humanoid').Health > 0 then
-                            local mypos = LocalPlayer.Character.HumanoidRootPart.Position
-                            local mobpos = mob.HumanoidRootPart.Position
-                            local dist = (mypos - mobpos).magnitude
-                            if dist < range then
-                                range = dist
-                                closestmob = mob
-                            end
-                        end
-                    end
-                end
-                return closestmob
-            end
-            local nearestmob = getclosestmob()
-            if nearestmob then
-                RemoteEvents['ToolAction']:FireServer(nearestmob)
             end
         end
     end
@@ -1423,7 +1391,7 @@ function TrapPlayer()
             end
             return closest
         end
-        RemoteEvents['CraftItem']:FireServer(371, GetClosestTrapPlayer(), 690)
+        RemoteEvents['CraftItem']:FireServer(264, GetClosestTrapPlayer(), 690)
     end
 end
 
@@ -2469,16 +2437,6 @@ AdvancedKillAuraSection:CreateToggle({
 
 local CombatMiscsSection = Combat:CreateSection('Miscs')
 
-CombatMiscsSection:CreateToggle({
-    Name = 'Mob Aura',
-    Default = false,
-    Flag = 'MobAura',
-    Callback = function(Value)
-        getgenv().configs.MobAura = Value
-        MobAura()
-    end
-})
-
 CombatMiscsSection:CreateKeybind({
     Name = 'Trap Player',
     Default = 'Minus',
@@ -2830,78 +2788,7 @@ LeaderboardSection:CreateButton({
     end
 })
 
-local BumpUpTeleportSection = Teleports:CreateSection('')
-
-local OreFindingSection = OtherStuff:CreateSection('Ore Finding')
-
-OreFindingSection:CreateButton({
-    Name = 'Ore Finder',
-    Callback = function()
-        local OrePositionTable = {}
-        for _, ore in pairs(Workspace:GetDescendants()) do
-            if ore.Name == getgenv().OreType then
-                if ore:IsA('Model') and ore.PrimaryPart ~= nil then
-                    local orepos = ore.PrimaryPart.Position
-                    table.insert(OrePositionTable, orepos)
-                    break
-                end
-            end
-        end
-        if OrePositionTable[1] == nil then
-            MakeAtlasNotification("No "..getgenv().OreType.. ' Gangy', 'There is no '..getgenv().OreType.. ' :(', 3)
-        else
-            if IsPlayerAlive(LocalPlayer) then
-                local myroot = LocalPlayer.Character.HumanoidRootPart
-                myroot.CFrame = CFrame.new(OrePositionTable[1] + Vector3.new(0, 5, 0))
-            end
-        end
-    end
-})
-
-OreFindingSection:CreateDropdown({
-    Name = 'Ore Finder',
-    DefaultItemSelected = 'Rock',
-    Options = {'Lunar Rock', 'Volcanic Rock', 'Zenyte Rock', 'Diamond Rock', 'Gold Rock', 'Ruby Rock', 'Candy Rock', 'Silver Rock', 'Coal Rock', 'Rock'},
-    ItemSelecting = true,
-    Callback = function(Value)
-        getgenv().OreType = Value 
-    end
-})
-
-local MiscFindingSection = OtherStuff:CreateSection('Pathes, Shells, Slimes Finding')
-
-MiscFindingSection:CreateButton({
-    Name = 'Other Stuff Finder',
-    Callback = function()
-        local MiscPositionsTable = {}
-        for _, misc in pairs(Workspace:GetDescendants()) do
-            if misc.Name == getgenv().MiscItems then
-                if misc:IsA('Model') and misc.PrimaryPart ~= nil then
-                    local miscpos = misc.PrimaryPart.Position
-                    table.insert(MiscPositionsTable, miscpos)
-                end
-            end
-        end
-        if MiscPositionsTable[1] == nil then
-            MakeAtlasNotification("No "..getgenv().MiscItems.. ' Gangy', 'There is no '..getgenv().MiscItems.. ' :(', 3)
-        else
-            if IsPlayerAlive(LocalPlayer) then
-                local myroot = LocalPlayer.Character.HumanoidRootPart
-                myroot.CFrame = CFrame.new(MiscPositionsTable[1] + Vector3.new(0, 5, 0))
-            end
-        end
-    end
-})
-
-MiscFindingSection:CreateDropdown({
-    Name = 'Item Type',
-    DefaultItemSelected = 'Watermelon Patch',
-    Options = {'Watermelon Patch', 'Potato Patch', 'Carrot Patch', 'Cabbage Patch', 'Small Oyster', 'Large Orange Shell', 'Large Pink Shell', 'Large White Shell', 'Small Orange Shell', 'Small Pink Shell', 'Small White Shell', 'Seaglass', 'Orange Slime', 'Green Slime', 'Blue Slime',},
-    ItemSelecting = true,
-    Callback = function(Value)
-       getgenv().MiscItems = Value 
-    end
-})
+local BumpUpTeleportSection = Teleports:CreateSection('') 
 
 local ChestSpawningSection = Chests:CreateSection('Chest Spawning')
 
