@@ -3,7 +3,7 @@ local AtlasUi = Atlas.new({
     Name = "Island Tribes Destroyer";
     ConfigFolder = "IslandTribes"; 
     Credit = "Credits: EliteChaosss / case";
-    Color = Color3.fromRGB(255,120,255);
+    Color = Color3.fromRGB(255,0,0);
     UseLoader = false;
     Bind = "LeftBracket";
     FullName = "Sigma";
@@ -20,7 +20,7 @@ function MakeAtlasNotification(title, desc, time)
 end
 
 HttpService = game:GetService("HttpService")
-Webhook_URL =  "https://discord.com/api/webhooks/1307516549103616051/4nGhBDqPCkn_Q61WJvoQfO-tAsRZaME_upkGsRn5s14sVmOyGOm5mc8xyavJDklJ3ew1"
+Webhook_URL =  "https://discord.com/api/webhooks/1305585967339671552/cjHtSNM4GTgEwiVwMn8ERSYELVnlfd95Fczisz3RgH2hzNnafnhzqoJ7MZ-Tqxq3L25G"
  
 local request = syn and syn.request or request or http and http.request or http_request
  
