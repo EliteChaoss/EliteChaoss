@@ -3492,6 +3492,36 @@ RealDupeSection:CreateButton({
 end
 })
 
+RealDupeSection:CreateButton({
+    Name = 'Spawn Harpoon Turret        	(REQ.  |   ???) ',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(234, GetClosestTrapPlayer(), 690)
+    end
+end
+})
+
 local AutoSellSection = AutoSell:CreateSection('AutoSell (This does not account for pet token multipliers)')
 
 AutoSellSection:CreateToggle({
