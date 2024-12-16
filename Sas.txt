@@ -703,6 +703,10 @@ local OtherStuff = AtlasUi:CreatePage("Resources")
 
 local AutoSell = AtlasUi:CreatePage("AutoSell")
 
+local AutoSell = AtlasUi:CreatePage("Credits")
+
+
+
 --stop everything if an admin joins
 Players.PlayerAdded:Connect(function(admin)
     if table.find(realgameadmins, admin.UserId) then
