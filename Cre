@@ -699,51 +699,8 @@ local Farming = AtlasUi:CreatePage("Farm")
 
 local Teleports = AtlasUi:CreatePage("Teleports")
 
-local OtherStuff = AtlasUi:CreatePage("Resources")
-
 local AutoSell = AtlasUi:CreatePage("AutoSell")
 
-local Credits = AtlasUi:CreatePage("Credits")
-
-
-
---stop everything if an admin joins
-Players.PlayerAdded:Connect(function(admin)
-    if table.find(realgameadmins, admin.UserId) then
-        if admin.UserId == '134488231' then
-            MakeAtlasNotification('Owner Joined', "Owner joined; carefull, ill disable everything for you", 30)
-        else
-            MakeAtlasNotification("Game Admin Joined: "..admin.Name, "Admin joined; carefull, ill disable everything for you", 30)
-        end
-        task.spawn(function()
-            repeat task.wait(1)
-                for setting, value in pairs(getgenv().configs) do
-                    if type(value) == 'boolean' then
-                        getgenv().configs[setting] = false
-                    end
-                end
-            until not Players:FindFirstChild(admin.Name)
-            if admin.UserId == '134488231' then
-                MakeAtlasNotification('Owner left', "Interesting interaction", 30)
-            else
-                MakeAtlasNotification('Admin left', "Ok the admin is gone.", 15)
-            end
-        end)
-    end
-end)
-
---setup ac bypass
-Remote = game:GetService("ReplicatedStorage").References.Comm.Events.Sonar
-
-local bypassac
-
-bypassac = hookmetamethod(game, '__namecall', function(self, ...)
-    local args = {...}
-    if not checkcaller() and self == Remote then
-        return nil
-    end
-    return bypassac(self, ...)
-end)
 
 --Antiafk
 if not getgenv().Idling ~= true then
@@ -1079,88 +1036,13 @@ function KillAura()
     end
 end
 
-function PlayerLock()
-    local function Wallcheck(target)
-        local ray = Ray.new(Camera.CFrame.Position, (target.Position - Camera.CFrame.Position).Unit * 1000)
-        local part, position = Workspace:FindPartOnRayWithIgnoreList(ray, {LocalPlayer.Character}, false, true)
-        if part then
-            local humanoid = part.Parent:FindFirstChildOfClass('Humanoid')
-            if not humanoid then
-                humanoid = part.Parent.Parent:FindFirstChildOfClass('Humanoid')
-            end
-            if humanoid and target and humanoid.Parent == target.Parent then
-                local pos, visible = Camera:WorldToScreenPoint(target.Position)
-                if visible then
-                    return true
-                end
-            end
-        end
-        return false
-    end
-    local function GetNearestPlayerToMouse()
-        if CurrentlyLocked and CurrentlyLocked.Humanoid.Health > 0 then return CurrentlyLocked end
-        local dist = 150
-        local closest
-        for _, plr in pairs(Players:GetPlayers()) do
-            if plr ~= LocalPlayer then
-                if IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
-                    local char = plr.Character
-                    local plrpos, onscreen = Camera:WorldToViewportPoint(char['HumanoidRootPart'].Position)
-                    if onscreen then
-                        if char:FindFirstChild("PlayerBillboard") and char:FindFirstChild('PlayerBillboard'):FindFirstChild('Title') and char:FindFirstChild('PlayerBillboard'):FindFirstChild('Title'):FindFirstChild('Icon') then
-                            if char:FindFirstChild('PlayerBillboard'):FindFirstChild('Title'):FindFirstChild('Icon').BackgroundColor3 == Color3.fromRGB(80, 63, 47) then
-                                local mag = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(plrpos.X, plrpos.Y)).Magnitude
-                                if mag < dist and (char.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).magnitude < dist then
-                                    if Wallcheck(char:FindFirstChild('HumanoidRootPart')) then
-                                        dist = mag
-                                        closest = char
-                                    end
-                                end
-                            else
-                                if char:FindFirstChild('PlayerBillboard'):FindFirstChild('Title'):FindFirstChild('Icon').BackgroundColor3 ~= LocalPlayer.Character:FindFirstChild('PlayerBillboard'):FindFirstChild('Title'):FindFirstChild('Icon').BackgroundColor3 then
-                                    local mag = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(plrpos.X, plrpos.Y)).Magnitude
-                                    if mag < dist and (char.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).magnitude < dist then
-                                        if Wallcheck(char:FindFirstChild('HumanoidRootPart')) then
-                                            dist = mag
-                                            closest = char
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end     
-            end
-        end
-        return closest
-    end
-    if not getgenv().Updater then
-        getgenv().Updater = RunService.RenderStepped:Connect(function()
-            if getgenv().configs.PlayerLock then
-                if UserInputService:IsMouseButtonPressed(Enum.UserInputType.Mousebutton2) then
-                    if GetNearestPlayerToMouse() then
-                        CurrentlyLocked = GetNearestPlayerToMouse()
-                        local SmoothSnap = TweenService:Create(Camera, TweenInfo.new(0.01, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, CurrentlyLocked:FindFirstChild('HumanoidRootPart').Position)})
-                        SmoothSnap:Play()
-                        SmoothSnap.Completed:Wait()
-                    end
-                else
-                    if CurrentlyLocked ~= nil then
-                        CurrentlyLocked = nil
-                    end
-                end
-            end
-        end)
-    end
-end
-
 function Pumpkins()
     while getgenv().configs.Pumpkins do
         if getgenv().configs.Pumpkins then
             task.wait()
             if IsPlayerAlive(LocalPlayer) then
                 local hum = LocalPlayer.Character.Humanoid
-                if hum.Health < 75 then
+                if hum.Health < 65 then
                     RemoteEvents['InventoryInteraction']:FireServer(378, "Eat")
                 end
             end
@@ -3072,86 +2954,6 @@ PlayerModificationsSection:CreateToggle({
 local MiscModSections = LPlayer:CreateSection('Misc Mods')
 
 MiscModSections:CreateButton({
-    Name = 'Get Map Candy(Op)',
-    Callback = function()
-        function GetCandy()
-            for _, candy in pairs(Workspace:GetDescendants()) do
-                if candy.Name == 'Candy' then
-                    repeat task.wait()
-                        local CandyPos = candy:GetPivot().Position
-                        if IsPlayerAlive(LocalPlayer) then
-                            if candy.Parent then
-                                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(CandyPos + Vector3.new(0, 2, 0))
-                                RemoteEvents['ItemInteracted']:FireServer(candy, "Pickup")
-                            end
-                        end
-                    until not candy.Parent or not IsPlayerAlive(LocalPlayer)
-                end
-            end
-        end
-        GetCandy()
-        if not Workspace:FindFirstChild('Candy', true) then
-            MakeAtlasNotification('No Candies left/found', 'No candies left in the map', 3)
-        end
-    end
-})
-
-if MyInventory:FindFirstChild("Glider") or MyInventory:FindFirstChild("Easter Glider") then
-    MiscModSections:CreateSliderToggle({
-        Name = "Mod Glider Speed",
-        Min = 30,
-        Max = 300,
-        SliderDefault = 30,
-        Digits = 0,
-        ToggleDefault = false,
-        SliderFlag = "GliderModSpeed",
-        ToggleFlag = "GliderModSpeedToggle",
-        SliderCallback = function(Value) 
-            getgenv().GliderModSpeed = Value
-        end,
-        ToggleCallback = function(Value)
-            local GliderModule = require(LocalPlayer:WaitForChild('PlayerScripts'):WaitForChild('Main'):WaitForChild('ToolController'):WaitForChild('ToolObject'):WaitForChild('Controllers'):WaitForChild('Glider'))
-            if Value == true then
-                setconstant(GliderModule.Step, 9, tonumber(getgenv().GliderModSpeed))
-            else
-                setconstant(GliderModule.Step, 9, 30)
-            end
-        end
-    })
-end
-
-MiscModSections:CreateButton({
-    Name = 'Restore Candy Mesh(not invisible)',
-    Callback = function()
-        local CheckPassiveOrNonPassive = Workspace:FindFirstChild("Replicators"):FindFirstChild('NonPassive') and 'NonPassive' or 'Passive'
-        for _, candy in pairs(Workspace:GetDescendants()) do
-            if candy.Name == 'Candy' and candy:FindFirstChildOfClass('MeshPart') then
-                candy.PrimaryPart.MeshId = 'rbxassetid://4018923852'
-            end
-        end
-        if not getgenv().CandyAdded then
-            getgenv().CandyAdded = Workspace:WaitForChild('Replicators')[CheckPassiveOrNonPassive].ChildAdded:Connect(function(candie)
-                task.wait(0.1)
-                if candie.Name == 'Pile of Candy' then
-                    for _, multicandy in pairs(candie:FindFirstChildOfClass('Model'):GetChildren()) do
-                        multicandy.MeshId = 'rbxassetid://4018923852'
-                    end
-                elseif candie.Name == 'Candy' and candie:FindFirstChildOfClass('MeshPart') then
-                    candie.PrimaryPart.MeshId = 'rbxassetid://4018923852'
-                end
-            end)
-            getgenv().CandyAdded2 = Workspace.ChildAdded:Connect(function(candie)
-                task.wait(0.1)
-                if candie.Name == 'Candy' and candie:FindFirstChildOfClass('MeshPart') then
-                    candie.PrimaryPart.MeshId = 'rbxassetid://4018923852'
-                end
-            end)
-        end
-        MakeAtlasNotification('Restored mesh', 'Candies should now be visible', 3)
-    end
-})
-
-MiscModSections:CreateButton({
     Name = 'Drive in water',
     Callback = function()
         local Cart = require(LocalPlayer:WaitForChild('PlayerScripts'):WaitForChild('Main'):WaitForChild('Vehicle'):WaitForChild('Cart'))
@@ -3494,6 +3296,36 @@ RealDupeSection:CreateButton({
             return closest
         end
         RemoteEvents['CraftItem']:FireServer(371, GetClosestTrapPlayer(), 690)
+    end
+end
+})
+
+RealDupeSection:CreateButton({
+    Name = 'Spawn Harpoon Turret        	(REQ.  |   ???) ',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(234, GetClosestTrapPlayer(), 690)
     end
 end
 })
@@ -4126,23 +3958,3 @@ VisualsSection:CreateColorPicker({
         Workspace:WaitForChild('Terrain').WaterColor = (Value)
     end
 })
-
-local BumpUpVisualsSection = Visuals:CreateSection('')
-
-local CreditSection = Credits:CreateSection('Discord Server')
-
-CreditSection:CreateParagraph("Discord Server  (https://discord.gg/radd9wnwNp)")
-
-local CreditSection = Credits:CreateSection('Creater Credits')
-
-CreditSection:CreateParagraph("EliteChaosss (Roblox User)")
-CreditSection:CreateParagraph("https://www.roblox.com/users/3234708638/profile (Roblox User Profile)")
-CreditSection:CreateParagraph("Made by elitechaoss (on discord)")
-CreditSection:CreateParagraph("For questions elitechaoss (on discord)")
-CreditSection:CreateParagraph("Discord Server  (https://discord.gg/radd9wnwNp)")
-
-local CreditSection = Credits:CreateSection('Helper Credits')
-
-CreditSection:CreateParagraph("Casemmm25590 (Roblox User)")
-CreditSection:CreateParagraph("https://www.roblox.com/users/3163368271/profile (Roblox User Profile)")
-CreditSection:CreateParagraph("Helped by casemmm25590 (on discord)")
