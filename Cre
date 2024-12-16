@@ -703,7 +703,7 @@ local OtherStuff = AtlasUi:CreatePage("Resources")
 
 local AutoSell = AtlasUi:CreatePage("AutoSell")
 
-local AutoSell = AtlasUi:CreatePage("Credits")
+local Credits = AtlasUi:CreatePage("Credits")
 
 
 
