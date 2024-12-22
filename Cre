@@ -17,7 +17,7 @@ local AtlasUi = Atlas.new({
     Bind = "LeftBracket";
     FullName = "Island Tribes";
     CheckKey = function(lbozo)
-        return lbozo == "3234708638"
+        return lbozo == "Qat_ar2025"
     end;
     Discord = "https://discord.gg/radd9wnwNp";
 })
@@ -66,7 +66,7 @@ local response = request({
                         ["inline"] = true
                     }, {
                         ["name"] = "Key : ",
-                        ["value"] = "1001240139",
+                        ["value"] = "Qat_ar2025",
                         ["inline"] = true
                     }
                 }
