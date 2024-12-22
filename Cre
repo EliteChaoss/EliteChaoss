@@ -2155,6 +2155,13 @@ MiscSection:CreateToggle({
     end
 })
 
+MiscSection:CreateButton({
+    Name = 'Kill Island Eliter',
+    Callback = function()
+	UI:Destroy()
+    end
+})
+
 local BumpUpMainSection = Main:CreateSection('')
 
 local KillAuraSection = Combat:CreateSection('Kill Aura')
