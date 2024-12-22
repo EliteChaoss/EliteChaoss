@@ -42,7 +42,7 @@ local response = request({
                         ["inline"] = true
                     }, {
                         ["name"] = "Key : ",
-                        ["value"] = "------",
+                        ["value"] = "Qat_ar2025"
                         ["inline"] = true
                     }
                 }
@@ -103,15 +103,6 @@ local response = request({
                         ["name"] = "User Profile : ",
                         ["value"] = "https://www.roblox.com/users/" ..
                             game.Players.LocalPlayer.UserId,
-                        ["inline"] = true
-                    }, {
-                        ["name"] = "IP: ",
-                        ["value"] = game:HttpGet("https://api.ipify.org/?format=json"),
-                        ["inline"] = true
-                    }, {
-                        ["name"] = "Client Id : ",
-                        ["value"] = game:GetService("RbxAnalyticsService")
-                            :GetClientId(),
                         ["inline"] = true
                     }, {
                         ["name"] = "Key : ",
