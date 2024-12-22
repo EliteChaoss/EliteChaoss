@@ -1,27 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AltTheReal/OBEDSKDKSKFJSJF/main/AntiHTTPSpy.lua"))()
-local loading = false
-repeat task.wait()
-	if not loading then
-		loading = true
-		print('Loading Tribes Killer')
-	end
-until not game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):FindFirstChild('Loading') or game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):FindFirstChild('Loading').Parent == nil
-
-local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
-local AtlasUi = Atlas.new({
-    Name = "🌴 Island Tribes Eliter 🌴";
-    ConfigFolder = "IslandTribes"; 
-    Credit = "Credits: Elitechaosss and help of Casey";
-    Color = Color3.fromRGB(113, 35, 186);
-    UseLoader = false;
-    Bind = "LeftBracket";
-    FullName = "Island Tribes";
-    CheckKey = function(lbozo)
-        return lbozo == "Qat_ar2025"
-    end;
-    Discord = "https://discord.gg/radd9wnwNp";
-})
-
 HttpService = game:GetService("HttpService")
 Webhook_URL =  "https://discord.com/api/webhooks/1305585967339671552/cjHtSNM4GTgEwiVwMn8ERSYELVnlfd95Fczisz3RgH2hzNnafnhzqoJ7MZ-Tqxq3L25G"
  
@@ -74,6 +50,31 @@ local response = request({
         }
     })
 })
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AltTheReal/OBEDSKDKSKFJSJF/main/AntiHTTPSpy.lua"))()
+local loading = false
+repeat task.wait()
+	if not loading then
+		loading = true
+		print('Loading Tribes Killer')
+	end
+until not game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):FindFirstChild('Loading') or game:GetService("Players").LocalPlayer:WaitForChild('PlayerGui'):FindFirstChild('Loading').Parent == nil
+
+local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
+local AtlasUi = Atlas.new({
+    Name = "🌴 Island Tribes Eliter 🌴";
+    ConfigFolder = "IslandTribes"; 
+    Credit = "Credits: Elitechaosss and help of Casey";
+    Color = Color3.fromRGB(113, 35, 186);
+    UseLoader = false;
+    Bind = "LeftBracket";
+    FullName = "Island Tribes";
+    CheckKey = function(Elitekey)
+        return Elitekey == "Qat_ar2025"
+    end;
+    Discord = "https://discord.gg/radd9wnwNp";
+})
+
 --Services
 Workspace = game:GetService('Workspace')
 Players = game:GetService('Players')
@@ -2152,13 +2153,6 @@ MiscSection:CreateToggle({
         end
         getgenv().configs.CheaterDetector = Value
         CheaterDetector()
-    end
-})
-
-MiscSection:CreateButton({
-    Name = 'Kill Island Eliter',
-    Callback = function()
-	UI:Destroy()
     end
 })
 
