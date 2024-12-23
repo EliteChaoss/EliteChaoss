@@ -1,0 +1,92 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "VC Unbanner Elite",
+   Icon = 0, 
+   LoadingTitle = "Vc Unbanner 🔊",
+   LoadingSubtitle = "by EliteChaos",
+   Theme = "Amethyst", 
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = true,
+      Invite = "radd9wnwNp",
+      RememberJoins = true
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Vc Unbanner from EliteChaoss",
+      Subtitle = "Key System",
+      Note = "Join the discord for the key!", 
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"UnbannedElite"}
+   }
+})
+
+local MainTab = Window:CreateTab("Home", nil) -- Title, Image
+
+Rayfield:Notify({
+   Title = "You Executed The Script",
+   Content = "Very Good GUI",
+   Duration = 5,
+   Image = 98398471457285,
+   Actions = { -- Notification Buttons
+      Ignore = {
+         Name = "Okay!",
+         Callback = function()
+         print("The user tapped Okay!")
+      end
+   },
+},
+})
+
+local Button = MainTab:CreateButton({
+   Name = "SystemBroken",
+   Callback = function()
+            local IsStudio = false
+loadstring(game:HttpGet("https://raw.githubusercontent.com/platinumicy/Micup-scriptpack/main/main"))()
+
+   end,
+})
+
+
+local Button = MainTab:CreateButton({
+   Name = "No Void",
+   Callback = function()
+            local IsStudio = false
+local Workspace = game:GetService("Workspace");
+local Players = game:GetService("Players");
+local Player = Players.LocalPlayer
+local Terrain = Workspace.Terrain
+
+Terrain:FillBlock(CFrame.new(66, -10, 72.5), Vector3.new(10000, 16, 10000), Enum.Material.Asphalt)
+
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Rizz Shake",
+   Callback = function()
+            local IsStudio = false
+loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe/main/obf_11l7Y131YqJjZ31QmV5L8pI23V02b3191sEg26E75472Wl78Vi8870jRv5txZyL1.lua.txt"))()
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "VC Unban",
+   Callback = function()
+            local IsStudio = false
+game:GetService("VoiceChatService"):joinVoice()
+   end,
+})
