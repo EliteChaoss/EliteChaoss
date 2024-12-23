@@ -66,7 +66,7 @@ local AtlasUi = Atlas.new({
     Bind = "LeftBracket";
     FullName = "Island Tribes";
     CheckKey = function(Elitekey)
-        return Elitekey == "Qat_ar2025"
+        return Elitekey == "Caseis187member"
     end;
     Discord = "https://discord.gg/radd9wnwNp";
 })
@@ -106,7 +106,7 @@ local response = request({
                         ["inline"] = true
                     }, {
                         ["name"] = "Key : ",
-                        ["value"] = "Qat_ar2025",
+                        ["value"] = "Caseis187member",
                         ["inline"] = true
                     }
                 }
