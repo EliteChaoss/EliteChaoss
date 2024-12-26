@@ -2095,16 +2095,8 @@ MiscSection:CreateToggle({
 MiscSection:CreateButton({
     Name = 'Resets character',
     Callback = function()
-        if IsPlayerAlive(LocalPlayer) then
-            local Respawn
-            local oldpos = LocalPlayer.Character.HumanoidRootPart.Position
-            LocalPlayer.Character.Humanoid.Health = 0
-            Respawn = LocalPlayer.CharacterAdded:Connect(function(chr)
-                chr:WaitForChild('HumanoidRootPart').CFrame = CFrame.new(oldpos)
-                Respawn:Disconnect()
-                return
-            end)
-        end
+     Event = game:GetService("ReplicatedStorage").References.Comm.Events.ResetCharacter
+	Event:fireServer()
     end
 })
 
