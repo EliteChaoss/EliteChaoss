@@ -1292,7 +1292,7 @@ function TrapPlayer()
             end
             return closest
         end
-        RemoteEvents['CraftItem']:FireServer(371, GetClosestTrapPlayer(), 690)
+        RemoteEvents['CraftItem']:FireServer(161, GetClosestTrapPlayer(), 690)
     end
 end
 
