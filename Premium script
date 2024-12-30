@@ -1,4 +1,4 @@
-if players.localPlayer.userid = "1978639364" then 
+if players.localPlayer.userid== "1978639364" then 
 game.Players.LocalPlayer:kick("your mom is gay")
 end
 do 
