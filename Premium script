@@ -3325,7 +3325,7 @@ end
 })
 
 RealDupeSection:CreateButton({
-    Name = 'Craft pumpkin thing       	(REQ.  |   ???,
+    Name = 'Craft pumpkin thing       	(REQ.  |   ???) ',
     Callback = function(Value)
         if IsPlayerAlive(LocalPlayer) then
         local function GetClosestTrapPlayer()
