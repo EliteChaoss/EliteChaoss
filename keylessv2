@@ -49,7 +49,7 @@ local response = request({
 
 local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
 local AtlasUi = Atlas.new({
-    Name = "🌴 Island Tribes Eliter 🌴  Paid Version";
+    Name = "💸💰 Island Tribes Eliter 💸💰  Paid Version";
     ConfigFolder = "IslandTribes"; 
     Credit = "Credits: Elitechaosss and help of Casey";
     Color = Color3.fromRGB(0, 255, 140);
