@@ -3325,7 +3325,7 @@ end
 })
 
 RealDupeSection:CreateButton({
-    Name = 'Spawn Harpoon Turret        	(REQ.  |   ???) ',
+    Name = 'Craft pumpkin thing       	(REQ.  |   ???,
     Callback = function(Value)
         if IsPlayerAlive(LocalPlayer) then
         local function GetClosestTrapPlayer()
@@ -3349,10 +3349,11 @@ RealDupeSection:CreateButton({
             end
             return closest
         end
-        RemoteEvents['CraftItem']:FireServer(234, GetClosestTrapPlayer(), 690)
+        RemoteEvents['CraftItem']:FireServer(336, GetClosestTrapPlayer(), 690)
     end
 end
 })
+
 
 local AutoSellSection = AutoSell:CreateSection('AutoSell (This does not account for pet token multipliers)')
 
