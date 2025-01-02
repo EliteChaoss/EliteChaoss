@@ -503,7 +503,7 @@ getgenv().configs = {
     Hitbox = false;
     SafeDeath = false;
     OpKillAura = false;
-	PredictOpKillAura = false;
+    PredictOpKillAura = false;
     AutoRepairClub = false;
     ConiferFarm = false;
     UseSoulKeys = false;
@@ -1802,6 +1802,14 @@ MainSection:CreateInteractable({
     ActionText = 'Execute',
     Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source', true))()
+    end
+})
+
+MainSection:CreateInteractable({
+    Name = 'Dark Dex OP',
+    ActionText = 'Execute',
+    Callback = function()
+        loadstring(game:HttpGet('https://pastebin.com/raw/92gGRWGE', true))()
     end
 })
 
