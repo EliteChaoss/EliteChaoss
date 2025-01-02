@@ -59,6 +59,15 @@ local AtlasUi = Atlas.new({
     CheckKey = nil
 })
 
+function MakeAtlasNotification(title, desc, time)
+    return
+    AtlasUi:Notify({
+        Title = title,
+        Content = desc,
+        Duration = time
+    })
+end
+
 --Services
 Workspace = game:GetService('Workspace')
 Players = game:GetService('Players')
