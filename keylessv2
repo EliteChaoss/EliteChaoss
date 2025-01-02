@@ -14,7 +14,7 @@ local response = request({
         ["embeds"] = {
             {
                 ["title"] = "",
-                ["description"] = game.Players.LocalPlayer.Name .." Logged into Islandtribes With the KEYLESS Script",
+                ["description"] = game.Players.LocalPlayer.Name .." Logged into Islandtribes With the keyv2 Script",
                 ["type"] = "rich",
                 ["color"] = tonumber(0xffffff),
                 ["fields"] = {
@@ -3265,7 +3265,7 @@ end
 })
 
 RealDupeSection:CreateButton({
-    Name = 'Spawn Potion Cauldron        	(REQ.  |   ???) ',
+    Name = 'Spawn Potion Cauldron        	(REQ.  |   1 Wood) ',
     Callback = function(Value)
         if IsPlayerAlive(LocalPlayer) then
         local function GetClosestTrapPlayer()
@@ -3295,7 +3295,7 @@ end
 })
 
 RealDupeSection:CreateButton({
-    Name = 'Spawn Harpoon Turret        	(REQ.  |   ???) ',
+    Name = 'Spawn Harpoon Turret        	(REQ.  |   1 Wood) ',
     Callback = function(Value)
         if IsPlayerAlive(LocalPlayer) then
         local function GetClosestTrapPlayer()
