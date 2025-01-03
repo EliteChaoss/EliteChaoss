@@ -47,8 +47,6 @@ local response = request({
     })
 })
 
-game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
-
 local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
 local AtlasUi = Atlas.new({
     Name = "🌴 Island Tribes Eliter 🌴  Free Version";
