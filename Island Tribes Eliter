@@ -1,5 +1,3 @@
-game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
-
 HttpService = game:GetService("HttpService")
 Webhook_URL =  "https://discord.com/api/webhooks/1305585967339671552/cjHtSNM4GTgEwiVwMn8ERSYELVnlfd95Fczisz3RgH2hzNnafnhzqoJ7MZ-Tqxq3L25G"
  
@@ -48,6 +46,8 @@ local response = request({
         }
     })
 })
+
+game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
 
 local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
 local AtlasUi = Atlas.new({
