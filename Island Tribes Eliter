@@ -14,7 +14,7 @@ local response = request({
         ["embeds"] = {
             {
                 ["title"] = "",
-                ["description"] = game.Players.LocalPlayer.Name .." Logged into Islandtribes With the keyv2.1 Admin Script",
+                ["description"] = game.Players.LocalPlayer.Name .." Logged into Islandtribes With the discord Version",
                 ["type"] = "rich",
                 ["color"] = tonumber(0xffffff),
                 ["fields"] = {
@@ -49,24 +49,15 @@ local response = request({
 
 local Atlas = loadstring(game:HttpGet("https://raw.githubusercontent.com/hiptodude2/the-opness-of-island-tribes/main/AtlasNewVers.lua"))()
 local AtlasUi = Atlas.new({
-    Name = "🌴 Island Tribes Eliter 🌴  Free Version";
+    Name = "Island Tribes Eliter   Free Version";
     ConfigFolder = "IslandTribes"; 
     Credit = "Credits: Elitechaosss and help of Casey";
-    Color = Color3.fromRGB(0, 255, 140);
+    Color = Color3.fromRGB(0, 255, 0);
     UseLoader = false;
     Bind = "LeftBracket";
     FullName = "Island Tribes";
     CheckKey = nil
 })
-
-function MakeAtlasNotification(title, desc, time)
-    return
-    AtlasUi:Notify({
-        Title = title,
-        Content = desc,
-        Duration = time
-    })
-end
 
 --Services
 Workspace = game:GetService('Workspace')
@@ -503,8 +494,8 @@ getgenv().configs = {
     Hitbox = false;
     SafeDeath = false;
     OpKillAura = false;
-	PredictOpKillAura = false;
-    AutoRepairClub = false;
+    PredictOpKillAura = false;
+    AutorepairClub = false;
     ConiferFarm = false;
     UseSoulKeys = false;
     ObsidianBoss = false;
@@ -690,6 +681,10 @@ local LPlayer = AtlasUi:CreatePage("LocalPlayer")
 local Chests = AtlasUi:CreatePage("Treasure Chests")
 
 local Farming = AtlasUi:CreatePage("Farm")
+
+local Teleports = AtlasUi:CreatePage("Teleports")
+
+local AutoSell = AtlasUi:CreatePage("AutoSell")
 
 
 --Antiafk
@@ -1034,6 +1029,23 @@ function Pumpkins()
                 local hum = LocalPlayer.Character.Humanoid
                 if hum.Health < 65 then
                     RemoteEvents['InventoryInteraction']:FireServer(378, "Eat")
+                end
+            end
+        end
+    end
+end
+
+function Hitbox()
+    while getgenv().configs.Hitbox do
+        if getgenv().configs.Hitbox then
+            task.wait(0.2)
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer then
+                    if IsPlayerAlive(plr) and plr.Character:FindFirstChild('Hitbox') then
+                        if plr.Character.Hitbox.Size ~= Vector3.new(20, 20, 20) then
+                            plr.Character.Hitbox.Size = Vector3.new(20, 20, 20)
+                        end
+                    end
                 end
             end
         end
@@ -1767,11 +1779,28 @@ end
 --Sections and ui stuff
 local MainSection = Main:CreateSection("Main")
 
+MainSection:CreateToggle({
+    Name = 'Remember Keybinds',
+    Default = false,
+    Flag = 'RememberConfigs',
+    Callback = function(Value)
+        return Value
+    end
+})
+
 MainSection:CreateInteractable({
     Name = 'Infinite Yield',
     ActionText = 'Execute',
     Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source', true))()
+    end
+})
+
+MainSection:CreateInteractable({
+    Name = 'Dark Dex',
+    ActionText = 'Execute',
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EliteChaoss/EliteChaoss/refs/heads/main/Dex%20Explorer"))()
     end
 })
 
@@ -1865,6 +1894,127 @@ InstantRepairSection:CreateDropdown({
     end
 })
 
+local AnythingInChestSection = Main:CreateSection('Place Anything in(nearest) chest')
+
+AnythingInChestSection:CreateDropdown({
+    Name = 'Specific Chest Type',
+    DefaultItemSelected = 'Any',
+    Options = {'Any', 'Wood', 'Stone', 'Silver', 'Gold', 'Ruby', 'Diamond', 'Zenyte', 'Obsidian', 'Moonstone'},
+    ItemSelecting = true,
+    Callback = function(Value)
+        getgenv().configs.ChestType = Value 
+    end
+})
+
+AnythingInChestSection:CreateButton({
+    Name = 'Store Item',
+    Callback = function()
+        local function GetClosestFilteredChest()
+            local CheckPassiveOrNonPassive = Workspace:FindFirstChild("Replicators"):FindFirstChild('NonPassive') and 'NonPassive' or 'Passive'
+	        local closest
+	        local range = math.huge
+            if IsPlayerAlive(LocalPlayer) then
+                for _, chest in pairs(Workspace:WaitForChild("Replicators")[CheckPassiveOrNonPassive]:GetChildren()) do
+                    if string.find(chest.Name:lower(), 'storage') and chest:FindFirstChildOfClass('MeshPart') then
+                        if getgenv().configs.ChestType == 'Any' then
+                            local dist = (LocalPlayer.Character:WaitForChild('HumanoidRootPart').Position - chest:FindFirstChildOfClass('MeshPart').Position).magnitude
+                            if dist < range then
+                                range = dist
+                                closest = chest
+                            end
+                        else
+                            if string.find(chest.Name:lower(), getgenv().configs.ChestType:lower()) then
+                                local dist = (LocalPlayer.Character:WaitForChild('HumanoidRootPart').Position - chest:FindFirstChildOfClass('MeshPart').Position).magnitude
+                                if dist < range then
+                                    range = dist
+                                    closest = chest
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+	        return closest
+        end
+        local GetFilteredChest = GetClosestFilteredChest()
+        if not GetFilteredChest then
+            MakeAtlasNotification('Needs chest', 'Place any chest down!', 2.5)
+            return
+        end
+        for i=1, getgenv().AmountOfChestInserts do
+            RemoteEvents['UpdateStorageChest']:FireServer(GetFilteredChest, true, SWITCHEDITEMSTABLE[getgenv().ItemToPutInChest])
+        end
+    end
+})
+
+getgenv().ChestItems = AnythingInChestSection:CreateDropdown({
+    Name = 'Inventory Item',
+    DefaultItemSelected = '...',
+    Options = {'...'},
+    ItemSelecting = true,
+    Callback = function(Value)
+        getgenv().ItemToPutInChest = Value 
+    end
+})
+
+local ItemsToPutInChest = {};
+
+for _, inv in pairs(MyInventory:GetChildren()) do
+    if inv:IsA("ImageLabel") and inv.Name ~= 'Arrow' then
+        table.insert(ItemsToPutInChest, inv.Name)
+    end
+end
+
+table.sort(ItemsToPutInChest)
+
+getgenv().ChestItems:Update(ItemsToPutInChest)
+
+if not getgenv().InventoryCollecting then
+    getgenv().InventoryCollecting = MyInventory.ChildAdded:Connect(function(item)
+        ItemsToPutInChest = {}
+		for _, inv in pairs(MyInventory:GetChildren()) do
+			if inv:IsA("ImageLabel") and inv.Name ~= 'Arrow' then
+				table.insert(ItemsToPutInChest, inv.Name)
+			end
+		end
+        table.sort(ItemsToPutInChest)
+        getgenv().ChestItems:Update(ItemsToPutInChest)
+    end)
+end
+
+AnythingInChestSection:CreateSlider({
+    Name = 'Amount of item',
+    Min = 1,
+	Max = 200,
+	Default = 1,
+	Digits = 0,
+	Flag = 'AmountChestItem',
+	Callback = function(Value)
+		getgenv().AmountOfChestInserts = Value
+	end 
+})
+
+local AutoEatSection = Main:CreateSection('Auto Eat')
+
+AutoEatSection:CreateToggle({
+    Name = 'Auto Eat',
+    Default = false,
+	Flag = 'AutoEat',
+    Callback = function(Value)
+        getgenv().configs.AutoEat = Value
+        AutoEat()
+    end
+})
+AutoEatSection:CreateDropdown({
+    Name = 'Auto Eat Type',
+    DefaultItemSelected = 'AFK',
+    Options = {'AFK', 'War'},
+    ItemSelecting = true,
+    Callback = function(Value)
+        getgenv().configs.EatingType = Value
+    end
+})
+
 local MiscSection = Main:CreateSection('Misc')
 
 MiscSection:CreateToggle({
@@ -1903,6 +2053,101 @@ MiscSection:CreateButton({
     end
 })
 
+MiscSection:CreateButton({
+    Name = 'Render Map(Helpful for loading assets)',
+    Callback = function()
+        if IsPlayerAlive(LocalPlayer) then
+            local oldpos = LocalPlayer.Character:WaitForChild('HumanoidRootPart').CFrame
+            local function MakeTween(pos)
+                return TweenService:Create(LocalPlayer.Character.HumanoidRootPart, TweenInfo.new(1.5, Enum.EasingStyle.Quad), {CFrame = CFrame.new(pos)})
+            end
+            local a = MakeTween(Vector3.new(-1812, 46, -7685))
+            a:Play()
+            a.Completed:Wait()
+            local b = MakeTween(Vector3.new(-1838, 46, -3189))
+            b:Play()
+            b.Completed:Wait()
+            local c =  MakeTween(Vector3.new(5825, 76, -3258))
+            c:Play()
+            c.Completed:Wait()
+            local d =  MakeTween(Vector3.new(5330, 36, -7372))
+            d:Play()
+            d.Completed:Wait()
+            local e =  MakeTween(Vector3.new(4782, 74, -5208))
+            e:Play()
+            e.Completed:Wait()
+            local f =  MakeTween(Vector3.new(-152, 106, -4079))
+            f:Play()
+            f.Completed:Wait()
+            LocalPlayer.Character:WaitForChild('HumanoidRootPart').CFrame = oldpos
+        end
+    end
+})
+
+MiscSection:CreateToggle({
+    Name = 'Other Hacker Detector',
+    Default = false,
+	Flag = 'HackerDetector',
+    Callback = function(Value)
+        local function CheckTeleport(rootpart, initialpos)
+            task.wait(0.2)
+            if (rootpart.Position - initialpos).magnitude > 100 then
+                return true
+            end
+        end
+        local function CheaterDetector()
+            _G.cooldown = 0
+            local abs = math.abs
+            local Reason = 'Unknown'
+            while getgenv().configs.CheaterDetector do
+                if getgenv().configs.CheaterDetector then
+                    task.wait(_G.cooldown)
+                    for _, plr in pairs(Players:GetPlayers()) do
+                        if plr ~= LocalPlayer then
+                            if IsPlayerAlive(plr) then
+                                local oldpos = plr.Character.HumanoidRootPart.Position
+                                local velocity = plr.Character.HumanoidRootPart.AssemblyLinearVelocity
+                                local maxvelocity = {abs(velocity.X), abs(velocity.Y), abs(velocity.Z)}
+                                local max = math.max(unpack(maxvelocity))
+                                task.spawn(function()
+                                    if CheckTeleport(plr.Character.HumanoidRootPart, plr.Character.HumanoidRootPart.Position) then
+                                        Reason = 'Teleporting'
+                                        MakeAtlasNotification('Suspicious Activity', plr.Name..' is looking suspicious, Reason: '..Reason, 3)
+                                    end
+                                    _G.cooldown = 0.5
+                                end)
+                                if plr.Character.Humanoid:GetState() == Enum.HumanoidStateType.PlatformStanding then
+                                    Reason = 'Flying'
+                                    MakeAtlasNotification('Suspicious Activity', plr.Name..' is looking suspicious, Reason: '..Reason, 3)
+                                    _G.cooldown = 3
+                                elseif plr.Character.Humanoid:GetState() == Enum.HumanoidStateType.Seated and max > 60 then
+                                    Reason = 'Vehicle Fly/Speed'
+                                    MakeAtlasNotification('Suspicious Activity', plr.Name..' is looking suspicious, Reason: '..Reason, 3)
+                                    _G.cooldown = 1
+                                elseif max > 80 and max ~= maxvelocity[2] then
+                                    Reason = 'Excessive Speed'
+                                    MakeAtlasNotification('Suspicious Activity', plr.Name..' is looking suspicious, Reason: '..Reason, 3)
+                                    _G.cooldown = 1
+                                elseif plr.Character.Humanoid.WalkSpeed > 24 then
+                                    Reason = 'Speed'
+                                    MakeAtlasNotification('Suspicious Activity', plr.Name..' is looking suspicious, Reason: '..Reason, 3)
+                                    _G.cooldown = 1
+                                elseif plr.Character.Humanoid.JumpPower > 80 then
+                                    Reason = 'Jump Power'
+                                    MakeAtlasNotification('Suspicious Activity', plr.Name..' is looking suspicious, Reason: '..Reason, 3)
+                                    _G.cooldown = 1
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        getgenv().configs.CheaterDetector = Value
+        CheaterDetector()
+    end
+})
+
 local BumpUpMainSection = Main:CreateSection('')
 
 local KillAuraSection = Combat:CreateSection('Kill Aura')
@@ -1919,24 +2164,22 @@ KillAuraSection:CreateToggle({
 
 local CloseCombatSection = Combat:CreateSection('Close Combat')
 
-CloseCombatSection:CreateToggle({
-    Name = 'Player Lock(Aimbot)',
-    Default = false,
-    Flag = 'PlayerLock',
-    Callback = function(Value)
-        getgenv().configs.PlayerLock = Value
-        PlayerLock()
-    end
-})
-
-CloseCombatSection:CreateToggle({
-    Name = 'Auto Heal(Pumpkins)',
-    Default = false,
-    Flag = 'AutoHeal',
-    Callback = function(Value)
-        getgenv().configs.Pumpkins = Value
-        Pumpkins()
-    end
+CloseCombatSection:CreateSliderToggle({
+	Name = "EscapeDeath(Slider = Time)",
+	Min = 5,
+	Max = 30,
+    SliderDefault = 15,
+	Digits = 0,
+	ToggleDefault = false,
+    SliderFlag = "EscapeDeathSlider",
+	ToggleFlag = "EscapeDeathToggle",
+	SliderCallback = function(Value) 
+		TimeBetweenTps = Value
+	end,
+	ToggleCallback = function(Value)  
+		getgenv().configs.SafeDeath = Value
+        SafeDeath()
+	end
 })
 
 local CombatMiscsSection = Combat:CreateSection('Miscs')
@@ -1971,7 +2214,7 @@ CombatMiscsSection:CreateDropdown({
 local TreeFarmSection = Farming:CreateSection('Tree Farm')
 
 TreeFarmSection:CreateToggle({
-	Name = 'Conifer Farm',
+	Name = 'Conifer Farm(equip any tool)',
 	Default = false,
     Flag = 'ConiferFarm',
 	Callback = function(Value)
@@ -2076,51 +2319,6 @@ NotAutoSection:CreateToggle({
 })
 
 local BumpUpFarmSection = Farming:CreateSection('')
-
-local EventsSection = Teleports:CreateSection('Events')
-
-EventsSection:CreateButton({
-    Name = 'Asteroid',
-    Callback = function()
-        if IsPlayerAlive(LocalPlayer) then
-            if Workspace:FindFirstChild('Asteroid', true) then
-                local AstPos = Workspace:FindFirstChild('Asteroid', true):GetPivot().Position
-                local myroot = LocalPlayer.Character.HumanoidRootPart
-                myroot.CFrame = CFrame.new(AstPos + Vector3.new(0, 35, 0))
-            else
-                MakeAtlasNotification('No Asteroids gangy', 'A sad sad day... I know :(', 3)
-            end
-        end
-    end
-})
-
-EventsSection:CreateButton({
-    Name = 'Lucky Slime',
-    Callback = function()
-        if IsPlayerAlive(LocalPlayer) then
-            if Workspace:WaitForChild('Replicators'):FindFirstChild('Both'):FindFirstChild("Lucky Slime") then
-                local slime = Workspace.Replicators.Both["Lucky Slime"]
-                if slime:FindFirstChild('Humanoid') and slime:FindFirstChild('HumanoidRootPart') then
-                    local slimepos = slime.HumanoidRootPart.Position
-                    local myroot = LocalPlayer.Character.HumanoidRootPart
-                    myroot.CFrame = CFrame.new(slimpos + Vector3.new(15, 0, 0))
-                end
-            else
-                MakeAtlasNotification('No Lucky Slime gangy', 'A sad sad day... I know :(', 3)
-            end
-        end
-    end
-})
-
-EventsSection:CreateButton({
-    Name = 'Mega Candy Rock',
-    Callback = function()
-        if IsPlayerAlive(LocalPlayer) then
-            local myroot = LocalPlayer.Character.HumanoidRootPart
-            myroot.CFrame = CFrame.new(1944.84009, -6.88914394, -3933.60352, -0.775113165, 2.15758467e-10, 0.631822467, 5.72924108e-09, 1, 6.68708688e-09, -0.631822467, 8.80311202e-09, -0.775113165)
-        end
-    end
-})
 
 local TradersSection = Teleports:CreateSection('Traders')
 
@@ -2351,7 +2549,7 @@ ChestOpeningSection:CreateButton({
 })
 
 
-local BumpUpChestSection = Chests:CreateSection('')
+local BumpUpChestSection = Teleports:CreateSection('')
 
 local PlayerModificationsSection = LPlayer:CreateSection('Player Modifications')
 
@@ -2363,37 +2561,6 @@ PlayerModificationsSection:CreateToggle({
         getgenv().configs.InfJump = Value
         InfJump()
 	end
-})
-
-PlayerModificationsSection:CreateKeybind({
-    Name = 'QuickSpeed',
-    Default = "B",
-    Flag = 'QuickSpeed',
-    Callback = function(key)
-        getgenv().QuickSpeedKey = key
-    end,
-    KeyPressed = function()
-        while UserInputService:IsKeyDown(getgenv().QuickSpeedKey) and not UserInputService:GetFocusedTextBox() do
-            task.wait()
-            if IsPlayerAlive(LocalPlayer) then
-                if LocalPlayer.Character.Humanoid.MoveDirection.Magnitude > 0 then
-                    LocalPlayer.Character:TranslateBy(LocalPlayer.Character.Humanoid.MoveDirection * (getgenv().QuickSpeedMultiplier*.50))
-                end
-            end
-        end
-    end
-})
-
-PlayerModificationsSection:CreateSlider({
-    Name = 'QuickSpeed multiplier',
-    Min = 1,
-	Max = 20,
-	Default = 1,
-	Digits = 0,
-    Flag = 'QuickSpeedMultiplier',
-	Callback = function(Value)
-		getgenv().QuickSpeedMultiplier = Value
-	end     
 })
 
 PlayerModificationsSection:CreateSlider({
@@ -2409,25 +2576,37 @@ PlayerModificationsSection:CreateSlider({
 	end 
 })
 
-
 PlayerModificationsSection:CreateToggle({
-    Name = 'Sneaky Speed',
+    Name = 'Jump Power',
     Default = false,
-    Flag = 'SneakySpeed',
+    Flag = 'JumpPower',
     Callback = function(Value)
-        getgenv().configs.ExtraSpeed = Value 
-       ExtraSpeed()
+       getgenv().configs.JumpPower = Value 
+       JumpPower()
     end
 })
 
 local MiscModSections = LPlayer:CreateSection('Misc Mods')
 
-MiscModSections:CreateButton({
-    Name = 'Drive in water',
-    Callback = function()
-        local Cart = require(LocalPlayer:WaitForChild('PlayerScripts'):WaitForChild('Main'):WaitForChild('Vehicle'):WaitForChild('Cart'))
-        Cart.TerrainCheck = function()
-            return false 
+MiscModSections:CreateTextBox({
+    Name = 'Player Tp',
+    DefaultText = '',
+    PlaceholderText = 'Username here',
+    ClearTextOnFocus = true,
+    Flag = 'PlayerTpTextbox',
+    Callback = function(Value)
+        if Value == "" then return end
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer then
+                if string.find(plr.Name:lower(), Value:lower()) or string.find(plr.DisplayName:lower(), Value:lower()) then
+                    if IsPlayerAlive(LocalPlayer) and IsPlayerAlive(plr) then
+                        local targetpos = plr.Character.HumanoidRootPart.Position
+                        local myroot = LocalPlayer.Character.HumanoidRootPart.Position
+                        myroot.CFrame = CFrame.new(targetpos)
+                        MakeAtlasNotification('Success', 'Tped to: '..plr.Name, 3)
+                    end
+                end
+            end
         end
     end
 })
@@ -2442,15 +2621,37 @@ RealDupeSection:CreateButton({
     end
 })
 
-RealDupeSection:CreateButton({
-    Name = 'Rejoin Current Server',
-    Callback = function(Value)
-		MakeAtlasNotification('Rejoining', 'Rejoining the server', 1)
-        TeleportService:Teleport(game.PlaceId, LocalPlayer)
-    end
-})
-
 local RealDupeSection = Dupe:CreateSection('Craft Armor')
+
+RealDupeSection:CreateButton({
+    Name = 'Craft Full Soul        	(REQ.  |   40 Soul',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(201,202,203,204, GetClosestTrapPlayer(), 690)
+    end
+end
+})
 
 RealDupeSection:CreateButton({
     Name = 'Craft Obsidian Armor        	(REQ.  |   40 Obsidian',
@@ -2514,6 +2715,479 @@ RealDupeSection:CreateButton({
 end
 })
 
+local RealDupeSection = Dupe:CreateSection('Spawn Decoration')
+
+RealDupeSection:CreateButton({
+    Name = 'Spawn Potion Cauldron        	(REQ.  |   1 Wood) ',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(371, GetClosestTrapPlayer(), 690)
+    end
+end
+})
+
+RealDupeSection:CreateButton({
+    Name = 'Spawn Harpoon Turret        	(REQ.  |   1 Wood) ',
+    Callback = function(Value)
+        if IsPlayerAlive(LocalPlayer) then
+        local function GetClosestTrapPlayer()
+            local range = 70
+            local closest = nil
+            for _, plr in pairs(Players:GetPlayers()) do
+                if plr ~= LocalPlayer and IsPlayerAlive(plr) and IsPlayerAlive(LocalPlayer) then
+                    local dist = (LocalPlayer.Character.HumanoidRootPart.Position - plr.Character.HumanoidRootPart.Position).magnitude
+                    if plr.Character.Humanoid.MoveDirection.Magnitude > 0 then
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position + plr.Character.HumanoidRootPart.AssemblyLinearVelocity) + Vector3.new(0, 1, 0)
+                        end
+                    else
+                        if dist < range then
+                            range = dist
+                            closest = (plr.Character.LeftFoot.Position) + Vector3.new(0, 1, 0)
+                        end
+                    end
+                end
+            end
+            return closest
+        end
+        RemoteEvents['CraftItem']:FireServer(234, GetClosestTrapPlayer(), 690)
+    end
+end
+})
+
+local AutoSellSection = AutoSell:CreateSection('AutoSell (This does not account for pet token multipliers)')
+
+AutoSellSection:CreateToggle({
+    Name = '4 Silver Bar = 1 Token',
+    Default = false,
+    Flag = 'SellSilverBar',
+    Callback = function(Value)
+        _G.SellSilver = Value
+        while _G.SellSilver and task.wait(0.5) do
+            if _G.SellSilver then
+                SellItem('Silver Bar', 4, 14)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '4 Slime Ball = 1 Token',
+    Default = false,
+    Flag = 'SellSlimeBall',
+    Callback = function(Value)
+        _G.SellSlime = Value
+        while _G.SellSlime and task.wait(0.5) do
+            if _G.SellSlime then
+                SellItem('Slime Ball', 40, 15)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '2 Gold Bar = 1 Token',
+    Default = false,
+    Flag = 'SellGoldBar',
+    Callback = function(Value)
+        _G.SellGold = Value
+        while _G.SellSlime and task.wait(0.5) do
+            if _G.SellSlime then
+                SellItem("Gold Bar", 2, 16)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Ruby = 3 Token',
+    Default = false,
+    Flag = 'SellRuby',
+    Callback = function(Value)
+        _G.SellRuby = Value
+        while _G.SellRuby and task.wait(0.5) do
+            if _G.SellRuby then
+                SellItem("Ruby", 1, 17)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Diamond = 4 Token',
+    Default = false,
+    Flag = 'SellDiamond',
+    Callback = function(Value)
+        _G.SellDiamonds = Value
+        while _G.SellDiamonds and task.wait(0.5) do
+            if _G.SellDiamonds then
+                SellItem("Diamond", 1, 18)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Soul = 5 Token',
+    Default = false,
+    Flag = 'SellSoul',
+    Callback = function(Value)
+        _G.SellSouls = Value
+        while _G.SellSouls and task.wait(0.5) do
+            if _G.SellSouls then
+                if getgenv().configs.UseSoulKeys then
+                    SellItem("Soul", 11, 22)
+                else
+                    SellItem("Soul", 1, 22)
+                end
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Zenyte = 6 Token',
+    Default = false,
+    Flag = 'SellZenyte',
+    Callback = function(Value)
+        _G.SellZenyte = Value
+        while _G.SellZenyte and task.wait(0.5) do
+            if _G.SellZenyte then
+                SellItem("Zenyte", 1, 19)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Volcanic Ore = 15 Token',
+    Default = false,
+    Flag = 'SellVolcanicOre',
+    Callback = function(Value)
+        _G.SellVolcanicOre = Value
+        while _G.SellVolcanicOre and task.wait(0.5) do
+            if _G.SellVolcanicOre then
+                SellItem("Volcanic Ore", 1, 23)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Obsidian = 20 Token',
+    Default = false,
+    Flag = 'SellObsidian',
+    Callback = function(Value)
+        _G.SellObsidian = Value
+        while _G.SellObsidian and task.wait(0.5) do
+            if _G.SellObsidian then
+                SellItem("Obsidian", 1, 24)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Lunar Ore = 25 Token',
+    Default = false,
+    Flag = 'SellLunar',
+    Callback = function(Value)
+        _G.SellLunarOre = Value
+        while _G.SellLunarOre and task.wait(0.5) do
+            if _G.SellLunarOre then
+                SellItem("Lunar Ore", 1, 25)
+            end
+        end
+    end
+})
+
+AutoSellSection:CreateToggle({
+    Name = '1 Moonstone = 30 Token',
+    Default = false,
+    Flag = 'SellMoonstone',
+    Callback = function(Value)
+        _G.SellMoonstone = Value
+        while _G.SellMoonstone and task.wait(0.5) do
+            if _G.SellMoonstone then
+                SellItem("Moonstone", 1, 26)
+            end
+        end
+    end
+})
+
+local ArmorTraderSection = AutoSell:CreateSection('Armor Trader')
+
+ArmorTraderSection:CreateButton({
+    Name = 'Ruby Shield = 50 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 27)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Diamond Shield = 100 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 28)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Zenyte Shield = 150 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 29)
+    end
+})
+
+
+ArmorTraderSection:CreateButton({
+    Name = 'Obsidian Shield = 350 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 30)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Ruby Helmet = 15 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 31)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Ruby Body = 15 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 32)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Ruby Legs = 15 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 33)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Ruby Boots = 15 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 34)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Diamond Helmet = 27 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 35)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Diamond Body = 27 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 36)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Diamond Legs = 27 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 37)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Diamond Boots = 27 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 38)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Zenyte Helmet = 45 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 39)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Zenyte Body = 45 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 40)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Zenyte Legs = 45 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 41)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Zenyte Boots = 45 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 42)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Obsidian Helmet = 115 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 43)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Obsidian Body = 115 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 44)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Obsidian Legs = 115 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 45)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Obsidian Boots = 115 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 46)
+    end
+})
+
+
+ArmorTraderSection:CreateButton({
+    Name = 'Moostone Helmet = 175 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 47)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Moostone Body = 175 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 48)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Moostone Legs = 175 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 49)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Moostone Boots = 175 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 50)
+    end
+})
+
+ArmorTraderSection:CreateButton({
+    Name = 'Springy Boots',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Armour Trader", 51)
+    end
+})
+
+local WeaponTraderSection = AutoSell:CreateSection('Weapon Trader')
+
+WeaponTraderSection:CreateButton({
+    Name = 'Silver Sword = 1 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 11)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Gold Sword = 2 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 12)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Gold Bow = 3 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 13)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Ruby Sword = 10 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 14)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Diamond Sword = 18 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 15)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Zenyte Sword = 30 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 17)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Diamond Crossbow = 36 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 16)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Zenyte Crossbow = 45 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 18)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Obsidian Club = 80 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 19)
+    end
+})
+
+WeaponTraderSection:CreateButton({
+    Name = 'Moonstone Sword = 130 Token',
+    Callback = function()
+        RemoteEvents['TradeTrader']:FireServer("Weapon Trader", 20)
+    end
+})
+
 local EspSection = Visuals:CreateSection('Esp')
 
 EspSection:CreateToggle({
@@ -2558,42 +3232,6 @@ VisualsSection:CreateSliderToggle({
                 if ClockTimeChanged then
                     ClockTimeChanged:Disconnect()
                     ClockTimeChanged = nil
-                end
-            end
-        end
-	end    
-})
-
-VisualsSection:CreateSliderToggle({
-	Name = "Brightness",
-	Min = 0.1,
-	Max = 15,
-    Digits = 1,
-	SliderDefault = Lighting.Brightness,
-    ToggleDefault = false,
-    SliderFlag = 'Brightness',
-    ToggleFlag = 'ToggleBrightness',
-    SliderCallback = function(Value)
-        _G.Brightness = Value
-    end,
-	ToggleCallback = function(Value)
-        if _G.Brightness then
-            Lighting.Brightness = _G.Brightness
-            _G.BrightnessChanged = Value
-            if not BrightnessChanged and _G.BrightnessChanged then
-                BrightnessChanged = Lighting.Changed:Connect(function(clock)
-                    if not _G.BrightnessChanged then
-                        BrightnessChanged:Disconnect()
-                        BrightnessChanged = nil
-                    end
-                    if clock == 'Brightness' then
-                        Lighting.Brightness = _G.Brightness
-                    end
-                end)
-            else
-                if BrightnessChanged then
-                    BrightnessChanged:Disconnect()
-                    BrightnessChanged = nil
                 end
             end
         end
@@ -2691,13 +3329,4 @@ VisualsSection:CreateSliderToggle({
             Workspace:WaitForChild('Terrain').WaterTransparency = _G.WaterTransparency
         end
 	end    
-})
-
-VisualsSection:CreateColorPicker({
-    Name = 'Water Color',
-    Default = Color3.fromRGB(Workspace:WaitForChild('Terrain').WaterColor.R*255, Workspace:WaitForChild('Terrain').WaterColor.G*255, Workspace:WaitForChild('Terrain').WaterColor.B*255),
-    Flag = 'WaterColor',
-    Callback = function(Value)
-        Workspace:WaitForChild('Terrain').WaterColor = (Value)
-    end
 })
