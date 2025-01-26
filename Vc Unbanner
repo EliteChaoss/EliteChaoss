@@ -30,7 +30,7 @@ local Window = Rayfield:CreateWindow({
       FileName = "Key",
       SaveKey = true,
       GrabKeyFromSite = false,
-      Key = {"UnbannedElite"}
+      Key = {"vchelp"}
    }
 })
 
@@ -51,42 +51,29 @@ Rayfield:Notify({
 },
 })
 
+
+local Button = MainTab:CreateButton({
+   Name = "🎤Remove Vc Timeout🔊",
+   Callback = function()
+            local IsStudio = false
+game:GetService("VoiceChatService"):joinVoice()
+   end,
+})
+
 local Button = MainTab:CreateButton({
    Name = "SystemBroken",
    Callback = function()
             local IsStudio = false
-loadstring(game:HttpGet("https://raw.githubusercontent.com/platinumicy/Micup-scriptpack/main/main"))()
+               loadstring(game:HttpGet("https://raw.githubusercontent.com/platinumicy/Micup-scriptpack/main/main"))()
 
    end,
 })
 
-
-local Button = MainTab:CreateButton({
-   Name = "No Void",
-   Callback = function()
-            local IsStudio = false
-local Workspace = game:GetService("Workspace");
-local Players = game:GetService("Players");
-local Player = Players.LocalPlayer
-local Terrain = Workspace.Terrain
-
-Terrain:FillBlock(CFrame.new(66, -10, 72.5), Vector3.new(10000, 16, 10000), Enum.Material.Asphalt)
-
-   end,
-})
 
 local Button = MainTab:CreateButton({
    Name = "Rizz Shake",
    Callback = function()
             local IsStudio = false
 loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe/main/obf_11l7Y131YqJjZ31QmV5L8pI23V02b3191sEg26E75472Wl78Vi8870jRv5txZyL1.lua.txt"))()
-   end,
-})
-
-local Button = MainTab:CreateButton({
-   Name = "VC Unban",
-   Callback = function()
-            local IsStudio = false
-game:GetService("VoiceChatService"):joinVoice()
    end,
 })
