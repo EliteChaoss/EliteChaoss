@@ -46,5 +46,3 @@ local response = request({
         }
     })
 })
-
-game:GetService("ReplicatedStorage").References.Comm.Events.EnableAdmin:fireServer()
